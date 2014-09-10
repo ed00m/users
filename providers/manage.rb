@@ -162,6 +162,7 @@ action :create do
       gid new_resource.group_id
     end
     members security_group
+    append new_resource.append
   end
 end
 
