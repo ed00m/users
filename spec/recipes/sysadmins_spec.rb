@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'users::sysadmins' do
   let(:chef_run) do
-    ChefSpec::ServerRunner.new(step_into: ['users_manage'], platform: 'ubuntu', version: '12.04') do |node, server|
+    ChefSpec::ServerRunner.new(step_into: ['users_manage']) do |node, server|
       server.create_data_bag('users', {
         createme: {
           id: 'createme',

@@ -15,7 +15,7 @@ describe 'users_test::test_home_dir' do
   end
 
   let(:chef_run) do
-    ChefSpec::ServerRunner.new(step_into: ['users_manage'], platform: 'ubuntu', version: '12.04') do |node, server|
+    ChefSpec::ServerRunner.new(step_into: ['users_manage']) do |node, server|
       server.create_data_bag('test_home_dir', {
         user_with_dev_null_home: {
           id: 'user_with_dev_null_home',
