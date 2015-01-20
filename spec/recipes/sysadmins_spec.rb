@@ -1,42 +1,36 @@
 require 'spec_helper'
 
 describe 'users::sysadmins' do
-  before do
-    ChefSpec::Server.create_data_bag('users', {
-      createme: {
-        id: 'createme',
-        groups: ['sysadmin'],
-        uid: 1234,
-        gid: 4321,
-      },
-      removeme: {
-        id: 'removeme',
-        groups: ['sysadmin'],
-        action: :remove,
-      },
-      createdevnull: {
-        id: 'createdevnull',
-        groups: ['sysadmin'],
-        home: '/dev/null',
-      },
-      lockme: {
-        id: 'lockme',
-        groups: ['sysadmin'],
-        action: :lock,
-      },
-      skipme: {
-        id: 'skipme',
-        groups: ['nonadmin'],
-      },
-    })
-  end
-
-  cached(:chef_run) do
-    ChefSpec::Runner.new(
-      step_into: ['users_manage'],
-      platform: 'ubuntu',
-      version: '12.04'
-    ).converge(described_recipe)
+  let(:chef_run) do
+    ChefSpec::ServerRunner.new(step_into: ['users_manage'], platform: 'ubuntu', version: '12.04') do |node, server|
+      server.create_data_bag('users', {
+        createme: {
+          id: 'createme',
+          groups: ['sysadmin'],
+          uid: 1234,
+          gid: 4321,
+        },
+        removeme: {
+          id: 'removeme',
+          groups: ['sysadmin'],
+          action: :remove,
+        },
+        createdevnull: {
+          id: 'createdevnull',
+          groups: ['sysadmin'],
+          home: '/dev/null',
+        },
+        lockme: {
+          id: 'lockme',
+          groups: ['sysadmin'],
+          action: :lock,
+        },
+        skipme: {
+          id: 'skipme',
+          groups: ['nonadmin'],
+        }
+      })
+      end.converge(described_recipe)
   end
 
   context 'Resource "users_manage"' do
