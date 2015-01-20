@@ -27,10 +27,13 @@ describe 'users_test::test_group_append' do
       expect(chef_run).to create_directory('/home/user_in_secondary_role_group/.ssh')
     end
 
-    it 'creates groups' do
-      expect(chef_run).to create_group('primarygroup')
+    it 'creates and appends groups' do
+      expect(chef_run).to create_group('user_in_primary_role_group_primarygroup').with(group_name: 'primarygroup', members: ['user_in_primary_role_group'], append: true)
+      expect(chef_run).to create_group('user_in_secondary_role_group_primarygroup').with(group_name: 'primarygroup', members: ['user_in_secondary_role_group'], append: true)
       expect(chef_run).to_not create_group('primaryrolegroup')
       expect(chef_run).to_not create_group('secondaryrolegroup')
+      expect(chef_run).to_not create_group('user_in_primary_role_group_primarygroup').with(group_name: 'user_in_primary_role_group_primarygroup')
+      expect(chef_run).to_not create_group('user_in_secondary_role_group_primarygroup').with(group_name: 'user_in_secondary_role_group_primarygroup')
     end
 
     it 'manages groups' do
