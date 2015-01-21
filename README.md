@@ -161,7 +161,7 @@ user_in_secondary_role_group: {
 },
 user_in_primary_group_but_not_roles: {
   id: 'user_in_primary_group_but_not_roles',
-  groups: ['primarygroup', 'tertiaryrolegroup']
+  groups: ['primarygroup']
 }
 ```
 
