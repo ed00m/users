@@ -1,4 +1,4 @@
-users Cookbook
+users Cookbook [![Build Status](https://travis-ci.org/the-galley/users.svg?branch=master)](https://travis-ci.org/the-galley/users)
 ==============
 Creates users from a databag search.
 
