@@ -10,7 +10,11 @@ describe 'users_test::test_group_append' do
         },
         user_in_secondary_role_group: {
           id: 'user_in_secondary_role_group',
-          groups: ['primarygroup', 'secondaryrolegroup'],
+          groups: ['primarygroup', 'secondaryrolegroup']
+        },
+        user_in_primary_group_but_not_roles: {
+          id: 'user_in_primary_group_but_not_roles',
+          groups: ['primarygroup', 'tertiaryrolegroup']
         }
       })
     end.converge(described_recipe)
@@ -20,6 +24,7 @@ describe 'users_test::test_group_append' do
     it 'creates users' do
       expect(chef_run).to create_user('user_in_primary_role_group')
       expect(chef_run).to create_user('user_in_secondary_role_group')
+      expect(chef_run).to_not create_user('user_in_primary_group_but_not_roles')
     end
 
     it 'manages .ssh dir for users' do
@@ -30,10 +35,12 @@ describe 'users_test::test_group_append' do
     it 'creates and appends groups' do
       expect(chef_run).to create_group('user_in_primary_role_group_primarygroup').with(group_name: 'primarygroup', members: ['user_in_primary_role_group'], append: true)
       expect(chef_run).to create_group('user_in_secondary_role_group_primarygroup').with(group_name: 'primarygroup', members: ['user_in_secondary_role_group'], append: true)
+      expect(chef_run).to_not create_group('user_in_primary_group_but_not_roles_tertiaryrolegroup').with(group_name: 'primarygroup', members: ['user_in_primary_group_but_not_roles'], append: true)
       expect(chef_run).to_not create_group('primaryrolegroup')
       expect(chef_run).to_not create_group('secondaryrolegroup')
       expect(chef_run).to_not create_group('user_in_primary_role_group_primarygroup').with(group_name: 'user_in_primary_role_group_primarygroup')
       expect(chef_run).to_not create_group('user_in_secondary_role_group_primarygroup').with(group_name: 'user_in_secondary_role_group_primarygroup')
+      expect(chef_run).to_not create_group('user_in_primary_group_but_not_roles_tertiaryrolegroup').with(group_name: 'user_in_primary_group_but_not_roles_tertiaryrolegroup')
     end
 
     it 'manages groups' do
