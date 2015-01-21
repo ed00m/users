@@ -2,6 +2,9 @@ users Cookbook CHANGELOG
 ========================
 This file is used to list changes made in each version of the users cookbook.
 
+v1.8.0 (2015-01-21)
+-------------------
+- Expose `append` functionality of group resource for use in users_manage
 
 v1.7.0 (2014-02-14)
 -------------------
