@@ -183,7 +183,7 @@ end
 
 In this case, 'user_in_primary_group_but_not_roles' is in 'primarygroup', but is not deployed to any servers based on the role groups.
 
-Note: group_id does not have to be unique when using `append true`. Additionally, the role groups are not created on the servers. Only 'primarygroup' is created with these users as members.
+Note: group_id does not need to be unique when using `append true`, but must match across all instances of users_manage for the group in the recipe. Additionally, the role groups are not created on the servers. Only 'primarygroup' is created with these users as members.
 
 The latest version of knife supports reading data bags from a file and automatically looks in a directory called +data_bags+ in the current directory. The "bag" should be a directory with JSON files of each item. For the above:
 
