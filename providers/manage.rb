@@ -157,11 +157,14 @@ action :create do
     end
   end
 
-  group new_resource.group_name do
+  # Use a unique resource name for this instance to avoid CHEF-3694
+  group "#{security_group.join()}_#{new_resource.group_name}" do
+    group_name new_resource.group_name
     if new_resource.group_id
       gid new_resource.group_id
     end
     members security_group
+    append new_resource.append
   end
 end
 

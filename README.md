@@ -111,7 +111,7 @@ And then change the action to "remove":
 }
 ```
 
-* Note only user bags with the "action : remove" and a search-able "group" attribute will be purged by the :remove action.
+* Note only user bags with the "action: remove" and a search-able "group" attribute will be purged by the :remove action.
 
 The sysadmins recipe makes use of the `users_manage` Lightweight Resource Provider (LWRP), and looks like this:
 
@@ -122,7 +122,7 @@ users_manage "sysadmin" do
 end
 ```
 
-Note this LWRP searches the `users` data bag for the `sysadmin` group attribute, and adds those users to a Unix security group `sysadmin`. The only required attribute is group_id, which represents the numeric Unix gid and *must* be unique. The default action for the LWRP is `:create` only.
+Note this LWRP searches the `users` data bag for the `sysadmin` group attribute, and adds those users to a Unix security group `sysadmin`. The only required attribute is group_id, which represents the numeric Unix gid and *must* be unique unless `append true` is used. In that case, group_id must match across all instances of users_manage for the group in the recipe. The default action for the LWRP is `:create` only.
 
 If you have different requirements, for example:
 
@@ -147,6 +147,43 @@ users_manage "postmaster" do
   group_id 10
 end
 ```
+
+If you want some users on all roles, and some users applied to only some of those roles, but all users in the same group on the systems (in cases of shared filesystems, for instance), the JSON might look like this:
+
+```javascript
+user_in_primary_role_group: {
+  id: 'user_in_primary_role_group',
+  groups: ['primarygroup', 'primaryrolegroup']
+},
+user_in_secondary_role_group: {
+  id: 'user_in_secondary_role_group',
+  groups: ['primarygroup', 'secondaryrolegroup'],
+},
+user_in_primary_group_but_not_roles: {
+  id: 'user_in_primary_group_but_not_roles',
+  groups: ['primarygroup', 'tertiaryrolegroup']
+}
+```
+
+The recipe might then look like this, adding both users to 'primarygroup' by using the `append` attribute:
+
+```ruby
+users_manage 'primaryrolegroup' do
+  group_name 'primarygroup'
+  group_id 3000
+  append true
+end
+
+users_manage 'secondaryrolegroup' do
+  group_name 'primarygroup'
+  group_id 3000
+  append true
+end
+```
+
+In this case, 'user_in_primary_group_but_not_roles' is in 'primarygroup', but is not deployed to any servers based on the role groups.
+
+Note: group_id does not need to be unique when using `append true`, but must match across all instances of users_manage for the group in the recipe. Additionally, the role groups are not created on the servers. Only 'primarygroup' is created with these users as members.
 
 The latest version of knife supports reading data bags from a file and automatically looks in a directory called +data_bags+ in the current directory. The "bag" should be a directory with JSON files of each item. For the above:
 
