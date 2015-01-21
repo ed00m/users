@@ -150,7 +150,7 @@ end
 
 If you want some users on all roles, and some users applied to only some of those roles, but all users in the same group on the systems (in cases of shared filesystems, for instance), the JSON might look like this:
 
-```json
+```javascript
 user_in_primary_role_group: {
   id: 'user_in_primary_role_group',
   groups: ['primarygroup', 'primaryrolegroup']
